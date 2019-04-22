@@ -1,0 +1,51 @@
+<div id="adversaire">
+    {% for i in 11..1 %}
+        <div class="adversairepile">
+            {% set j = 0 %}
+            {% for carte in terrainAdversaire[i]|reverse %}
+
+                <div style="transform: rotate(180deg); z-index: {{ j }};position: relative;" class="carte"
+                     data-pile="{{ i }}"
+                     data-couleur="{{ tCartes[carte].type }}"
+                     data-poid="{{ tCartes[carte].valeur }}"
+                     data-id="{{ carte }}"
+                     data-position="{{ loop.index }}"
+                     data-nb-cartes="{{ partie.plateauJ2[i]|length }}">
+                    <img width="100px" height="auto" src="{{ asset('assets/cartes/'~tCartes[carte].image) }}">
+                </div>
+                {% set j = j-1 %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+
+<div id="terrain" style="clear: both;">
+    {% for i in 1..11 %}
+        {% if loop.first %}
+            <div class="terrain terrain-first">&nbsp;</div>
+        {% elseif loop.last %}
+            <div class="terrain terrain-last">&nbsp;</div>
+        {% else %}
+            <div class="terrain terrain-case">{{ loop.index }}</div>
+        {% endif %}
+    {% endfor %}
+</div>
+<div id="moncote">
+    {% for i in 1..11 %}
+        <div class="pile">
+            {% for carte in terrainJoueur[i] %}
+                <div class="carte" style="position: relative;">
+                    <img width="100px" height="auto" src="{{ asset('assets/cartes/'~tCartes[carte].image) }}">
+                    <button class="deplacement {{ tCartes[carte].couleurTexte }} btn-sm btn btn-outline-success"
+                            data-pile="{{ i }}"
+                            data-id="{{ carte }}"
+                            data-couleur="{{ tCartes[carte].type }}"
+                            data-poid="{{ tCartes[carte].valeur }}"
+                            data-position="{{ loop.index }}"
+                            data-nb-cartes="{{ partie.plateauJ1[i]|length }}"
+                            style="display:none; position: absolute; z-index: 1000; top: 5px; right: 5px;">&#x2794;</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>

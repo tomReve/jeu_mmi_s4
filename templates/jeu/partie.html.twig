@@ -1,0 +1,535 @@
+{% extends 'base_jeu.html.twig' %}
+
+{% block stylesheets %}
+    <style>
+        .terrain {
+            float: left;
+            width: 65px;
+            margin: 5px;
+            border-radius: 5px;
+        }
+        .pile {
+            float: left;
+            width: 65px;
+            margin: 5px;
+        }
+        .de.blue {
+            background-color: lightskyblue;
+        }
+        .de.green {
+            background-color: lightgreen;
+        }
+        .de.red {
+            background-color: lightsalmon;
+        }
+        .carte {
+            height: 50px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+        #moncote {
+            clear: both;
+        }
+        .adversaire {
+            position: relative;
+        }
+        .adversairepile {
+            width: 65px;
+            margin: 3px;
+            display: inline-block;
+            vertical-align: bottom;
+        }
+        .joue {
+            border: 3px darkgray solid;
+            opacity: 0.5;
+        }
+
+        .terrain img{
+            width: 65px;
+            height: auto;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+     <section class="plateaujeu">
+            <div class="plateaugauche">
+                <div class="divjoueur2">
+                    <div class="borderjoueur2"></div>
+                    <p>
+                        {% if app.user == partie.joueur1 %}{{ partie.joueur2.pseudo }}{% else %}{{ partie.joueur1.pseudo }}{% endif %}
+                    </p>
+                </div>
+
+                <div class="">
+
+                </div>
+
+
+                <div class="boutondes">
+                    <button id="de1" class="bouton" data-couleur="1">{% if partie.des %}{{ partie.des.de1.valeur }}{% else %}0{% endif %}</button>
+                    <button id="de2" class="bouton" data-couleur="2">{% if partie.des %}{{ partie.des.de2.valeur }}{% else %}0{% endif %}</button>
+                    <button id="de3" class="bouton" data-couleur="3">{% if partie.des %}{{ partie.des.de3.valeur }}{% else %}0{% endif %}</button>
+                    <button id="lancer" class="btn btn-primary btn-block btn">Lancer</button>
+                    <button id="fintour" style="display: none" class="btn btn-warning btn-block btn">Terminer</button>
+                    <!-- <button id="grey" class="bouton" disabled="disabled">1</button> -->
+                </div>
+            </div>
+
+            <div class="plateaucentre" id="partie">
+                {{ render(controller("App\\Controller\\JeuController::plateau", { partie:partie.id})) }}
+            </div>
+
+            <div class="boutonfin">
+                <a href="{{ path('profile') }}"><img src="{{ asset('assets/images/button-quitter-plato.png') }}" alt="Quitter la partie" width="200vw"></a>
+            </div>
+
+            <div class="plateaudroit">
+                <div class="divchat" id="affiche">
+                    <div class="message" id="contentchat">
+                        {% if chats %}
+                            {% for chat in chats %}
+                                {% if chat.expediteur == app.user %}
+                                    <div class="message1">
+                                        <p class="joueur1">{{ chat.message }}</p>
+                                    </div>
+                                    <div class="triangle2"></div>
+                                {% else %}
+                                    <div class="message2">
+                                        <p class="joueur2">{{ chat.message }}</p>
+                                    </div>
+                                    <div class="triangle"></div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <form class="chatfin" method="post">
+                            <input type="text" id="message" placeholder="Message...">
+                            <button type="submit" id="envoyer" value="Envoyer"></button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    <div id="modalDes" class="modal">
+
+    </div>
+    <div id="modalVictoire" class="modal">
+
+    </div>
+    <div id="modalDefaite" class="modal">
+
+    </div>
+    <div id="modalHache" class="modal">
+
+    </div>
+    <div id="modalBouclier" class="modal">
+
+    </div>
+    <div id="modalArc" class="modal">
+
+    </div>
+    <div id="modalVersus" class="modal">
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function(){
+            $('#modalDes').click(function(){
+                $('#modalDes').toggle() // AFFICHE ET CACHE A CHAQUE CLIQUE SUR LE BOUTTON
+            });
+            $('#modalVictoire').click(function(){
+                $('#modalVictoire').toggle() // AFFICHE ET CACHE A CHAQUE CLIQUE SUR LE BOUTTON
+            });
+            $('#modalDefaite').click(function(){
+                $('#modalDefaite').toggle() // AFFICHE ET CACHE A CHAQUE CLIQUE SUR LE BOUTTON
+            });
+        });
+    </script>
+
+    <script>
+        var valeur;
+        var de;
+        function getRandomInt (max) {
+        return Math.floor(Math.random() * Math.floor(max) + 1)
+        }
+        $(document).on('click', '#lancer', function () {
+            //$('.deplacement').hide()
+            $('#modalDes').toggle(); // AFFICHE ET CACHE A CHAQUE CLIQUE SUR LE BOUTTON
+            var de1 = getRandomInt(3);
+            var de2 = getRandomInt(3);
+            var de3 = getRandomInt(3);
+            $('#de1').empty().text(de1);
+            $('#de2').empty().text(de2);
+            $('#de3').empty().text(de3);
+            $('#de1').removeAttr("disabled").removeClass('joue');
+            $('#de2').removeAttr("disabled").removeClass('joue');
+            $('#de3').removeAttr("disabled").removeClass('joue');
+            $(this).attr('disabled', 'disabled').addClass('btn-defaut').removeClass('btn-primary')
+
+
+            $.ajax({
+                url: "{{ path('sauvegarder_lance_des', {partie:partie.id}) }}",
+                data: {
+                    de1: de1,
+                    de2: de2,
+                    de3: de3,
+                    statut1: 0,
+                    statut2: 0,
+                    statut3: 0
+                },
+                method: 'POST'
+            })
+        });
+
+        {% if partie.des != null %}
+            {% if partie.tour == app.user.id %}
+                $('#de1').empty().text({{ partie.des.de1.valeur }});
+                $('#de2').empty().text({{ partie.des.de2.valeur }});
+                $('#de3').empty().text({{ partie.des.de3.valeur }});
+
+                $('#lancer').attr('disabled', 'disabled').addClass('btn-defaut').removeClass('btn-primary');
+                {% if partie.des.de1.statut == 1 %}
+                $('#de1').attr("disabled", "disabled").addClass('joue');
+                {% endif %}
+                {% if partie.des.de2.statut == 1 %}
+                $('#de2').attr("disabled", "disabled").addClass('joue');
+                {% endif %}
+                {% if partie.des.de3.statut == 1 %}
+                $('#de3').attr("disabled", "disabled").addClass('joue');
+                {% endif %}
+                {% if partie.des.de3.statut == 1 or partie.des.de2.statut == 1 or partie.des.de1.statut == 1 %}
+                $('#fintour').show();
+                {% endif %}
+            {% endif %}
+        {% else %}
+            $('#de1').attr("disabled", "disabled").addClass('joue');
+            $('#de2').attr("disabled", "disabled").addClass('joue');
+            $('#de3').attr("disabled", "disabled").addClass('joue');
+        {% endif %}
+
+        {% if partie.tour != app.user.id %}
+            $('#de1').attr("disabled", "disabled").addClass('joue');
+            $('#de2').attr("disabled", "disabled").addClass('joue');
+            $('#de3').attr("disabled", "disabled").addClass('joue');
+            $('#actions').empty().append('Tour de l\'adversaire');
+            $('#lancer').attr('disabled', 'disabled').addClass('btn-defaut').removeClass('btn-primary');
+
+        {% endif %}
+
+        $(document).on('click', '#de1', function(){
+            {% if partie.tour == app.user.id %}
+            $('#actions').empty().append('Jouer le dé bleu');
+            $('.deplacement').hide();
+            $('.deplacement.blue').show();
+            $('.deplacement.shogun').show();
+            valeur = $(this).text();
+            de = $(this);
+            {% else %}
+            $('#actions').empty().append('Vous ne pouvez pas jouer c\'est le tour de votre adversiare!');
+            {% endif %}
+        });
+        $(document).on('click', '#de2', function(){
+            {% if partie.tour == app.user.id %}
+            $('#actions').empty().append('Jouer le dé rouge');
+            $('.deplacement').hide();
+            $('.deplacement.red').show();
+            $('.deplacement.shogun').show();
+            valeur = $(this).text();
+            de = $(this);
+            {% else %}
+            $('#actions').empty().append('Vous ne pouvez pas jouer c\'est le tour de votre adversiare!');
+            {% endif %}
+        });
+        $(document).on('click', '#de3', function(){
+            {% if partie.tour == app.user.id %}
+            $('#actions').empty().append('Jouer le dé vert');
+            $('.deplacement').hide();
+            $('.deplacement.green').show();
+            $('.deplacement.shogun').show();
+            valeur = $(this).text();
+            de = $(this);
+            {% else %}
+            $('#actions').empty().append('Vous ne pouvez pas jouer c\'est le tour de votre adversiare!');
+            {% endif %}
+        });
+
+        $(document).on('click', '.deplacement', function(){
+            var pileDest = $(this).data('pile')+parseInt(valeur);
+            if (pileDest > 11){
+                $('#actions').empty().append('<strong style="color:red">Déplacement impossible</strong>');
+            } else {
+                if ($(this).data('nb-cartes') - $(this).data('position') > 2) {
+                    $('#actions').empty().append('<strong style="color:red">Déplacement interdit. 3 cartes maximum.</strong>');
+                } else {
+                    $.ajax({
+                        url: "{{ path('deplacement_game', {partie:partie.id}) }}",
+                        method: 'POST',
+                        data: {
+                            id: $(this).data('id'),
+                            pile: $(this).data('pile'),
+                            position: $(this).data('position'),
+                            valeur: valeur
+                        },
+                        success: function (data) {
+                            aumoinsunde = true;
+                            $('#fintour').show();
+                            de.attr("disabled", "disabled").addClass('joue');
+                            $('#partie').empty().load("{{ path('refresh_game', {partie:partie.id}) }}");
+
+                            var statut1 = {% if partie.des %}{{ partie.des.de1.statut }}{% else %}0{% endif %};
+                            var statut2 = {% if partie.des %}{{ partie.des.de2.statut }}{% else %}0{% endif %};
+                            var statut3 = {% if partie.des %}{{ partie.des.de3.statut }}{% else %}0{% endif %};
+
+                            if(de[0].id === "de1")
+                            {
+                                statut1 = 1;
+                            } else if(de[0].id === "de2")
+                            {
+                                statut2 = 1;
+                            } else if(de[0].id === "de3")
+                            {
+                                statut3 = 1;
+                            }
+
+                            $.ajax({
+                                url: "{{ path('sauvegarder_lance_des', {partie:partie.id}) }}",
+                                data: {
+                                    de1: {% if partie.des %}{{ partie.des.de1.valeur }}{% else %}$("#de1").text(){% endif %},
+                                    de2: {% if partie.des %}{{ partie.des.de2.valeur }}{% else %}$("#de2").text(){% endif %},
+                                    de3: {% if partie.des %}{{ partie.des.de3.valeur }}{% else %}$("#de3").text(){% endif %},
+                                    statut1: statut1,
+                                    statut2: statut2,
+                                    statut3: statut3
+                                },
+                                method: 'POST'
+                            });
+
+                            if (data.etat == 'ok') {
+                                $('#actions').empty().append('<strong style="color:green">Déplacement effectué.</strong>');
+                            } else if(data.etat == 'win'){
+                                $('#modalVictoire').toggle() // AFFICHE ET CACHE A CHAQUE CLIQUE SUR LE BOUTTON
+                                function finPartie() {
+                                    window.location.replace("{{ path('profile') }}");
+                                }
+                                setTimeout(finPartie, 5000);
+                            } else {
+                                carte = data.idDerniereCarte;
+                                carteAdv = data.idDerniereCarteAdv;
+                                pile = data.pileDest;
+                                pileAdv = data.pileDestAdv;
+                                nbCartesPileAdv = data.nbCartesPileAdv;
+                                nbCartesPile = data.nbCartesPile;
+                                hpLeftShogun1 = 4;
+                                hpLeftShogunAdv2 = 4;
+                                carteJ1type = data.carteJ1type;
+                                carteJ2type = data.carteJ2type;
+                                console.log("pileadv " + pileAdv);
+                                console.log("pile " + pile);
+                                console.log("nb pile adv "+nbCartesPileAdv);
+                                console.log("nb pile "+nbCartesPile);
+                                console.log("carte adv " + carteAdv);
+                                console.log("carte" + carte);
+
+                                function resolvconflit() {
+                                    {#$('#modalDes').toggle() // AFFICHE ET CACHE A CHAQUE CLIQUE SUR LE BOUTTON #}
+                                    $('#actions').empty().append('<strong style="color:red">Conflit... Résolution en cours</strong>');
+                                    $.ajax({
+                                        url: "{{ path('resolve_conflict_game', {partie:partie.id}) }}",
+                                        method: 'POST',
+                                        data: {
+                                            pile: pile,
+                                            pileAdv: pileAdv,
+                                            carte: carte,
+                                            carteAdv: carteAdv,
+                                            hpLeftShogun1: hpLeftShogun1,
+                                            hpLeftShogunAdv2: hpLeftShogunAdv2
+                                        },
+                                        success: function (data2) {
+                                            if(data2.resultat == "J1"){
+                                                nbCartesPileAdv = data2.nb;
+                                                carteAdv = data2.lastcard;
+                                                carteJ1type = data2.carteJ1type;
+                                                carteJ2type = data2.carteJ2type;
+                                                console.log("pileadv " + pileAdv);
+                                                console.log("pile " + pile);
+                                                console.log("nb pile adv "+nbCartesPileAdv);
+                                                console.log("nb pile "+nbCartesPile);
+                                                console.log("carte adv " + carteAdv);
+                                                console.log("carte" + carte);
+                                                $('#actions').empty().append('<strong style="color:red">J1 remporte le conflit</strong>');
+                                            } else if (data2.resultat == "J2"){
+                                                nbCartesPile = data2.nb;
+                                                carte = data2.lastcard;
+                                                carteJ1type = data2.carteJ1type;
+                                                carteJ2type = data2.carteJ2type;
+                                                console.log("pileadv " + pileAdv);
+                                                console.log("pile " + pile);
+                                                console.log("nb pile adv "+nbCartesPileAdv);
+                                                console.log("nb pile "+nbCartesPile);
+                                                console.log("carte adv " + carteAdv);
+                                                console.log("carte" + carte);
+                                                $('#actions').empty().append('<strong style="color:red">J2 remporte le conflit</strong>');
+                                            } else if (data2.resultat == "SHOGUNJ1"){
+                                                nbCartesPile = data2.nb;
+                                                nbCartesPileAdv = data2.nb2;
+                                                carte = data2.lastcard;
+                                                carteAdv = data2.lastcard2;
+                                                hpLeftShogun1 = data2.hpLeftShogun;
+                                                carteJ1type = data2.carteJ1type;
+                                                carteJ2type = data2.carteJ2type;
+                                                console.log("pileadv " + pileAdv);
+                                                console.log("pile " + pile);
+                                                console.log("nb pile adv "+nbCartesPileAdv);
+                                                console.log("nb pile "+nbCartesPile);
+                                                console.log("carte adv " + carteAdv);
+                                                console.log("carte" + carte);
+                                                console.log("hpShogun" + hpLeftShogun1);
+                                                $('#actions').empty().append('<strong style="color:red">Combat avec le shogun du J1</strong>');
+                                            } else if(data2.resultat == "SHOGUN2"){
+                                                nbCartesPile = data2.nb;
+                                                nbCartesPileAdv = data2.nb2;
+                                                carte = data2.lastcard;
+                                                carteAdv = data2.lastcard2;
+                                                hpLeftShogunAdv2 = data2.hpLeftShogunAdv;
+                                                carteJ1type = data2.carteJ1type;
+                                                carteJ2type = data2.carteJ2type;
+                                                console.log("pileadv " + pileAdv);
+                                                console.log("pile " + pile);
+                                                console.log("nb pile adv "+nbCartesPileAdv);
+                                                console.log("nb pile "+nbCartesPile);
+                                                console.log("carte adv " + carteAdv);
+                                                console.log("carte" + carte);
+                                                console.log("hpShogun" + hpLeftShogunAdv2);
+                                                $('#actions').empty().append('<strong style="color:red">Combat avec le shogun du J2</strong>');
+                                            } else if(data2.resultat == "win"){
+                                                nbCartesPileAdv = 0;
+                                                nbCartesPile = 0;
+                                                $('#modalVictoire').toggle() // AFFICHE ET CACHE A CHAQUE CLIQUE SUR LE BOUTTON
+                                                function finPartie() {
+                                                    window.location.replace("{{ path('profile') }}");
+                                                }
+                                                setTimeout(finPartie, 5000);
+                                            } else if(data2.resultat == "loose"){
+                                                nbCartesPileAdv = 0;
+                                                nbCartesPile = 0;
+                                                $('#modalDefaite').toggle() // AFFICHE ET CACHE A CHAQUE CLIQUE SUR LE BOUTTON
+                                                function finPartie() {
+                                                    window.location.replace("{{ path('profile') }}");
+                                                }
+                                                setTimeout(finPartie, 5000);
+                                            } else {
+                                                nbCartesPile = data2.nb;
+                                                nbCartesPileAdv = data2.nb2;
+                                                carte = data2.lastcard;
+                                                carteAdv=data2.lastcard2;
+                                                carteJ1type = data2.carteJ1type;
+                                                carteJ2type = data2.carteJ2type;
+                                                console.log("pileadv " + pileAdv);
+                                                console.log("pile " + pile);
+                                                console.log("nb pile adv "+nbCartesPileAdv);
+                                                console.log("nb pile "+nbCartesPile);
+                                                console.log("carte adv " + carteAdv);
+                                                console.log("carte" + carte);
+                                                $('#actions').empty().append('<strong style="color:red">Egalité</strong>');
+                                            }
+                                            if(carteJ1type == "hache" && carteJ2type == "bouclier" || carteJ1type == "bouclier" && carteJ2type == "hache"){
+                                                $('#modalHache').toggle();
+                                                setTimeout(function(){$('#modalHache').toggle()}, 3000);
+                                            } else if (carteJ1type == "bouclier" && carteJ2type == "arc" || carteJ1type == "arc" && carteJ2type == "bouclier"){
+                                                $('#modalBouclier').toggle();
+                                                setTimeout(function(){$('#modalBouclier').toggle()}, 3000);
+                                            } else if (carteJ1type == "arc" && carteJ2type == "hache" || carteJ1type == "hache" && carteJ2type == "arc"){
+                                                $('#modalArc').toggle();
+                                                setTimeout(function(){$('#modalArc').toggle()}, 3000);
+                                            } else {
+                                                $('#modalVersus').toggle();
+                                                setTimeout(function(){$('#modalVersus').toggle()}, 3000);
+                                            }
+                                            $('#partie').empty().load("{{ path('refresh_game', {partie:partie.id}) }}");
+                                            if (nbCartesPile > 0 && nbCartesPileAdv > 0){
+                                                setTimeout(resolvconflit,5000);
+                                            }
+                                        }
+                                    });
+                                }
+                                resolvconflit();
+                            }
+                        }
+                    })
+                }
+            }
+        });
+
+        $(document).on('click', '#fintour', function(){
+            {% if partie.joueur1.id == app.user.id %}
+                {% set adversaire = partie.joueur2.id %}
+            {% else %}
+                {% set adversaire = partie.joueur1.id %}
+            {% endif %}
+
+            $.ajax({
+                url: "{{ path('change_tour_game', {partie:partie.id}) }}",
+                data: {
+                    adversaire : {{ adversaire }}
+                },
+                method: 'POST'
+            });
+
+            $('#de1').attr("disabled", "disabled").addClass('joue');
+            $('#de2').attr("disabled", "disabled").addClass('joue');
+            $('#de3').attr("disabled", "disabled").addClass('joue');
+            $('#fintour').hide();
+            $('#actions').empty().append('Tour de l\'adversaire');
+        });
+
+        //chat
+        $(document).ready(function(){
+
+            $('#envoyer').click(function(e){
+                e.preventDefault();
+                console.info('Clique');
+                var message =$('#message').val();
+                $.ajax({
+                    url: "{{ path('jeu__envoyer_chat_partie', {partie:partie.id}) }}",
+                    data: {
+                        message : message
+                    },
+                    method: 'POST'
+                });
+                console.log(message);
+                $('#message').val('');
+
+            });
+
+            {#setInterval(function () {
+                $('#contentchat').load("{{ path('jeu_affiche_partie', {partie: partie.id})}} #contentchat");
+            }, 1000)#}
+
+        });
+
+        {% if app.user == partie.perdant %}
+            $('#modalDefaite').toggle() // AFFICHE ET CACHE A CHAQUE CLIQUE SUR LE BOUTTON
+            function finPartie() {
+                window.location.replace("{{ path('profile') }}");
+            }
+            setTimeout(finPartie, 5000);
+        {% endif %}
+
+        {% if app.user == partie.gagnant %}
+        $('#modalVictoire').toggle() // AFFICHE ET CACHE A CHAQUE CLIQUE SUR LE BOUTTON
+        function finPartie() {
+            window.location.replace("{{ path('profile') }}");
+        }
+        setTimeout(finPartie, 5000);
+        {% endif %}
+    </script>
+{% endblock %}
+
+{% block title %}
+    Partie
+{% endblock %}
+

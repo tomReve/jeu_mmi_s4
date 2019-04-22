@@ -1,0 +1,52 @@
+{% extends 'base_accueil.html.twig' %}
+
+{% block body %}
+<div class="conteneur">
+
+    <section class="accueilhaut">
+        <div class="hautaccueilgauche"></div>
+        <div class="hautaccueildroit">
+            <div class="hautlogoetpicto">
+                <img src="{{ asset('assets/images/logo-or-sans-fond-noir.png') }}" alt="" width="150vw">
+
+                <div class="pictopanierparams">
+                    <a href="{{ path('app_login') }}"><img src="{{ asset('assets/images/mechanical-gears.svg') }}" alt="Lien vers Backoffice" width="25vw"></a>
+                    <a href="../promo/pages/panier.php"><img src="{{ asset('assets/images/shop.svg') }}" alt="Lien vers la page panier pour acheter Battle Of Yggdasil" width="25vw"></a>
+                </div>
+            </div>
+
+            <div class="accueiltext">
+                <h2><span>BATTLE OF </span>YGGDRASIL</h2>
+                <p>Alors que la paix règnait au sein des Neuf Royaumes, Hela Déesse de la mort, bannit d’Asgard par Odin, constitua une armée de mort avec l’aide de son frère Fenrir, le Loup Géant afin de marcher sur l’Arbre Monde, Yggdrasil, en quête de destruction de Midgard. Odin, mis en garde par le fidèle Gardien Heimdall, n’eut d’autre choix que de se rendre à Midgard en personne pour contrer la menace imminente. Prenant sous sa direction un peuple humains nommé « Viking » et adorateur de sa lignée pour détruire le Royaume des Morts et la menace qu’il constituait, ils marchèrent à leur tour sur l’Arbre Monde vers l’une des guerres qui marquerait à tout jamais l’histoire des Neufs Royaumes.</p>
+                <a href="{{ path('security_inscription') }}" class="newjoueur">Nouveau joueur ?</a>
+                <a href="{{ path('app_login') }}" class="seconnecter">Se connecter</a>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="accueilbas">
+        <h2>COMMENT <span>JOUER ?</span></h2>
+
+        <div class="accueilall">
+
+            <div class="accueilvideo">
+                <div class="video">
+                    <iframe width="730" height="470" src="https://www.youtube.com/embed/mms-KgwhKkY"
+                            frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+
+                <div class="reseau">
+                    <a href="https://twitter.com/BattleYggdrasil" target="blank"><img src="{{ asset('assets/images/icon_twitter.svg') }}" alt="Logo de Twitter" width="40vw"></a>
+                    <a href="https://www.facebook.com/Battle-of-Yggdrasil-417984829010428/" target="blank"><img src="{{ asset('assets/images/icon_facebook.svg') }}" alt="Logo de Facebook"  width="40vw"></a>
+                    <a href="https://www.instagram.com/battleofyggdrasil/" target="blank"><img src="{{ asset('assets/images/icon_instagram.svg') }}" alt="Logo d'Instagram"  width="40vw"></a>
+                </div>
+            </div>
+
+            <div class="accueildes">
+                <img src="{{ asset('assets/images/dice.svg') }}" width="200vw" alt="Dés de Battle of Yggdrasil" style="margin: 0 4vw 15vw 0;">
+            </div>
+
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h1>Notifications reçues</h1>
+        <br/>
+            {% for mail in mails %}
+            <div class="mail">
+                <h2>{% if mail.expediteur.id == 1 %}Admin{% else %}{{ mail.expediteur.pseudo }}{% endif %} - {{ mail.envoyeLe | date("d/m/Y")}}</h2>
+                {{ mail.contenu | raw }}
+            </div>
+            {% endfor %}
+    </div>
+{% endblock %}
+
+{% block title %}
+    Notifications
+{% endblock %}
+

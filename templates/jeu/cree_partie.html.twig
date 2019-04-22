@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="jumbotron">
+        <div>
+            <h2>Creer une partie</h2>
+            <form action="{{ path('jeu_distribue_partie') }}" method="POST">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">C'est parti !</button>
+                </div>
+            </form>
+        </div>
+        <br/>
+        <div>
+            <h2>Inviter un joueur connecté</h2>
+            <form action="{{ path('jeu_distribue_partie') }}" method="POST">
+                <div class="form-group">
+                    <label for="adversaire">Choisissez votre adversaire</label>
+                    <select name="adversaire" id="adversaire">
+                        <option value="">Choisir</option>
+                        {% for user in users %}
+                            {% if user.id != app.user.id %}
+                                {% if user.online == 1 %}
+                                    <option value="{{ user.id }}">{{ user.pseudo }}</option>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary">C'est parti !</button>
+                </div>
+            </form>
+        </div>
+        <br/>
+        <div>
+            <h2>Inviter un ami à jouer</h2>
+            <form action="{{ path('jeu_distribue_partie') }}" method="POST">
+                <div class="form-group">
+                    <label for="adversaire">Choisissez votre adversaire</label>
+                    <select name="ami" id="ami">
+                        <option value="">Choisir</option>
+                        {% for ami in amis %}
+                            <option value="{{ ami.amiUser.id }}">{{ ami.amiUser.pseudo }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary">C'est parti !</button>
+                </div>
+            </form>
+        </div>
+        <br/>
+        <div>
+            <h2>Rejoindre une partie</h2>
+            <div>
+                {% if partieAttente != null %}
+                    {% set j = 0 %}
+                    {% for partie in partieAttente %}
+                        {% if partie.joueur1.id != app.user.id  %}
+                            <p>{{ partie.id }} - adversaire : {{ partie.joueur1.pseudo }} <a href="{{ path('jeu_rejoindre_partie', {partie: partie.id}) }}">Rejoindre la partie</a></p>
+                            {% set j = j+1 %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if j == 0 %}
+                        <p>Pas de partie en attente !</p>
+                    {% endif %}
+                {% else %}
+                    <p>Pas de partie en attente !</p>
+                {% endif %}
+            </div>
+        </div>
+        <br/>
+        <div>
+            <h2>Parties en cours</h2>
+            <div>
+                {% if partiesJ2 != null %}
+                    {% for partie in partiesJ2 %}
+                        {% if partie.finieLe == null %}
+                            <p>{{ partie.id }}  - adversaire : {{partie.joueur1.pseudo }} <a href="{{ path('jeu_affiche_partie', {partie:partie.id} )}}">Reprendre </a><a href="{{ path('jeu_abandone_partie', {partie:partie.id}) }}">Abandonner </a><a href="{{ path('jeu_relancer_joueur_partie', {partie:partie.id}) }}">Relancer le joueur</a></p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if partiesJ1 != null %}
+                    {% for partie in partiesJ1 %}
+                        {% if partie.finieLe == null %}
+                            {% if partie.joueur2 != null %}
+                                <p>{{ partie.id }} - adversaire : {{ partie.joueur2.pseudo }} <a href="{{ path('jeu_affiche_partie', {partie:partie.id} )}}">Reprendre </a><a href="{{ path('jeu_abandone_partie', {partie:partie.id}) }}">Abandonner </a><a href="{{ path('jeu_relancer_joueur_partie', {partie:partie.id}) }}">Relancer le joueur</a></p>
+                            {% else %}
+                                <p>{{ partie.id }} - en attende d'un adversaire !</p>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block title %}
+    Jouer !
+{% endblock %}
+

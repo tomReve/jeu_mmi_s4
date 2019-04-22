@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h2>Modifier mes informations personnelles</h2>
+        {{ form_start(form) }}
+        {{ form_row(form.nom, {'label' : 'Votre nom', 'attr': {'placeholder' : 'Nom'}}) }}
+        {{ form_row(form.prenom, {'label' : 'Votre prenom', 'attr': {'placeholder' : 'Prenom'}}) }}
+        {{ form_row(form.pseudo, {'label' : 'Pseudonyme', 'attr': {'placeholder' : 'Pseudonyme'}}) }}
+        <button type="submit" class="btn btn-success" formnovalidate>Modifier</button>
+        {{ form_end(form) }}
+        <br/>
+        <button class="btn btn-primary"><a style="color: white" href="{{ path('profile_mdp') }}">Modifier votre mot de passe !</a></button>
+    </div>
+
+{% endblock body %}

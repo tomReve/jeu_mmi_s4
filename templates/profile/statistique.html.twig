@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProfileController!{% endblock %}
+
+{% block body %}
+    <div class="jumbotron">
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-action active d-flex justify-content-between align-items-center">
+                Vos statistiques
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Parties jouées
+                <span class="">{{ user.partiesJ1.count + user.partiesJ2.count }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Parties en cours
+                <span class="">{{ user.partiesJ1.count + user.partiesJ2.count - user.partiesGagnees.count - user.partiesPerdues.count}}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Parties terminées
+                <span class="">{{ user.partiesGagnees.count + user.partiesPerdues.count }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Parties gagnées
+                <span class="">{{ user.partiesGagnees.count }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Parties perdues
+                <span class="">{{ user.partiesPerdues.count }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Ratio W/L
+                <span class="">
+                    {%  if  user.partiesPerdues.count == 0 or user.partiesGagnees.count == 0 %}
+                        N/A
+                    {% else %}
+                        {{ user.partiesGagnees.count / user.partiesPerdues.count }}
+                    {% endif %}
+                </span>
+            </li>
+        </ul>
+    </div>
+
+{% endblock %}

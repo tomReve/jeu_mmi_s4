@@ -1,0 +1,265 @@
+@font-face {
+    font-family:'norse-regular';
+    src: url('../fonts/Norse.otf');
+}
+
+@font-face {
+    font-family:'norse-bold';
+    src: url('../fonts/Norsebold.otf');
+}
+
+
+body{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'raleway';
+    overflow-x: hidden;
+    outline: none;
+}
+
+/********** SCROLLBAR **********/
+::-webkit-scrollbar /* taille de la scrollbar*/
+{
+	width: 6px;
+}
+
+::-webkit-scrollbar-track
+{
+	background-color:#343333;
+
+}
+
+::-webkit-scrollbar-thumb
+{
+	background-color:#bbab79;
+	border-radius: 5px;
+}
+
+/********************************** PLATEAU DE JEU ******************************/
+.plateaujeu{
+    width: 100vw;
+    height: 100vh;
+    background-image: url(../images/background-plato.svg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+}
+
+.plateaucentre{
+    margin-top: 50px;
+    padding-left: 1vw;
+    width: 70vw;
+    height: 80vh;
+}
+
+.boutonfin{
+    width: 40vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2vw;
+}
+
+.plateaugauche{
+    width: 10vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.plateaudroit{
+    width: 20vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+/* BOUTON DES */
+.boutondes{
+    position: absolute;
+    bottom: 5vw;
+    left: 4vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#de1 {
+	background-image: url(../images/de_bleu.png);
+    background-color: #443C67;
+}
+
+#de3{
+	background-image: url(../images/de_vert.png);
+    background-color: #505323;
+    margin-right: 0.5vw;
+}
+
+#de2{
+	background-image: url(../images/de_rouge.png);
+	background-color: #8D261D;
+}
+
+#grey{
+	background-image: url(../images/de_gris.png);
+  	cursor: not-allowed;
+}
+
+#lancer{
+    width: 10vw;
+    margin: 1.5vw 0 0 0;
+    background-color: transparent;
+    background-color: #a19174;
+    border: none;
+    padding: 0.5vw 0.5vw 0.5vw 0.5vw;
+    color: #40241f;
+    font-weight: 700;
+    font-size: 2vw;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+    font-family: 'norse-regular';
+}
+
+.bouton{
+	background-size: contain;
+	background-position: center center;
+	width: 70px;
+	height: 70px;
+	border: none;
+	color: white;
+	font-size: 20px;
+	border-radius: 7px;
+	background-repeat: no-repeat;
+	outline-color: black;
+	outline-offset: 0px;
+    margin: 10px;
+}
+
+.bouton:focus{
+	border: black inset 2px;
+}
+
+/* JOUEUR 2 */
+.divjoueur2{
+    width: 10vw;
+    position: absolute;
+    top: 1vw;
+    left: 5.5vw;
+}
+
+.borderjoueur2{
+    width: 8vw;
+    height: 8vw;
+    background-color: #1B333F;
+    background-image: url(../images/decor-en-haut.png);
+    background-size: 1.5vw;
+    background-repeat: no-repeat;
+    background-position: top 0.2vw right 0.2vw;
+    border: 5px solid #A8997A;
+}
+
+.divjoueur2 p{
+   transform: rotate(90deg);
+   font-family: norse-bold;
+   color: white;
+   font-size: 1.2em;
+   position: absolute;
+   top: 2.5vw;
+   right: -1.5vw;
+}
+
+/* CHAT */
+.divchat{
+    width: 17vw;
+    height: 53vh;
+    background-image: url(../images/back-formulaire.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: 5px solid #A8997A;
+    position: absolute;
+    bottom: 15px;
+    right: 0.5vw;
+    color: white;  
+}
+
+.message{
+    width: 16.8vw;
+    height: 41vh;
+    overflow: scroll;
+    overflow-x: hidden;
+    margin-top: 2.5vw;
+}
+
+.message2{
+    background-color: #A8997A;
+    width: 15vw;
+    margin-left: 0.5vw;
+    padding: 0.1vw 0 0.1vw 0.2vw;
+    margin-top: 1vw;
+}
+
+.message1{
+    background-color: #A8997A;
+    width: 15vw;
+    margin-left: 0.5vw;
+    padding: 0.1vw 0 0.1vw 0.2vw;
+    margin-top: 1vw;
+}
+
+.chatfin input{
+    background-color: #A8997A;
+    border: none;
+    color: white;
+    padding: 0.5vw 0vw 0.5vw 0.5vw;
+    position: absolute;
+    bottom: 0.5vw;
+    left: 0.5vw;
+    width: 65%;
+}
+
+.chatfin input::placeholder{
+    color: white;
+}
+
+.chatfin button{
+    width: 5vw;
+    height: 4vh;
+    background-image: url(../images/button-chat.png);
+    background-size: 3.5vw;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none;
+    background-color: transparent;
+    position: absolute;
+    bottom: 0.5vw;
+    right: 0;
+}
+
+.triangle{
+    width:0;
+    height:0;  
+    border-top:solid 1vw #A8997A;  
+    border-right:solid 1vw transparent; 
+    border-bottom:solid 0vw transparent; 
+    border-left:solid 0vw transparent;
+    margin-left: 2vw;
+}
+
+.triangle2{
+    width:0;
+    height:0;  
+    border-top:solid 1vw #A8997A;  
+    border-right:solid 0vw transparent; 
+    border-bottom:solid 0vw transparent; 
+    border-left:solid 1vw transparent;
+    margin-left: 13vw;
+}

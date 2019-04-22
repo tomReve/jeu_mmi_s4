@@ -1,0 +1,318 @@
+{% extends 'base_accueil.html.twig' %}
+
+{% block body %}
+
+<div class="conteneur">
+    <section class="accueilhaut">
+        <div class="hautaccueilgauche"></div>
+        <div class="hautaccueildroit">
+            <div class="notifications">
+                <div class="nomlogo">
+                    <p>{{ app.user.pseudo }}</p>
+                    <a href="{{ path('profile_notification') }}"><img src="{{ asset('assets/images/email.svg') }}" alt="" width="20vw"></a>
+                </div>
+            </div>
+
+            <div class="hautlogoetpicto">
+                <img src="{{ asset('assets/images/logo-or-sans-fond-noir.png') }}" alt="" width="150vw">
+
+                <div class="pictopanierparams">
+                    <a href="{{ path('profile_update') }}"><img src="{{ asset('assets/images/mechanical-gears.svg') }}" alt="Lien vers Backoffice" width="25vw"></a>
+                    <a href="http://149.91.83.88/promo"><img src="{{ asset('assets/images/shop.svg') }}" alt="Lien vers la page panier pour acheter Battle Of Yggdasil" width="25vw"></a>
+                </div>
+            </div>
+
+            <div class="profiltext">
+                <h2>{{ app.user.pseudo }}</h2>
+                <div class="profil">
+                    <div class="imgprofil">
+                        <p>?</p>
+                    </div>
+
+                    <div class="infojoueur">
+                        <p>Nom : {{ app.user.nom }}</p>
+                        <p>Prénom : {{ app.user.prenom }}</p>
+                        <p>E-mail : {{ app.user.email }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="statistiques">
+        <div class="stathaut">
+            <h1>Bienvenue {{ app.user.pseudo }},</h1>
+            <div class="statprofil">
+                <div class="statdetail1">
+                    <div class="petitdetail1">
+                        <fieldset>
+                            <legend>Parties jouées</legend>
+                            <p>{{ user.partiesJ1.count + user.partiesJ2.count }}</p>
+                        </fieldset>
+                    </div>
+
+                    <div class="petitdetail2">
+                        <fieldset>
+                            <legend>Parties en cours</legend>
+                            <p>{{ user.partiesJ1.count + user.partiesJ2.count - user.partiesGagnees.count - user.partiesPerdues.count}}</p>
+                        </fieldset>
+                    </div>
+
+                    <div class="petitdetail3">
+                        <fieldset>
+                            <legend>Parties terminées</legend>
+                            <p class="field1">{{ user.partiesGagnees.count }}</p>
+                            <p class="field2">{{ user.partiesPerdues.count }}</p>
+                        </fieldset>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="statbas">
+            <div class="statprofil">
+                <div class="statdetail2">
+                    <div class="petitdetail1">
+                        <fieldset>
+                            <legend>Date d'inscription </legend>
+                            <p class="field1">{{ app.user.creationle | date(('d')) }}</p>
+                            <p class="field3">/{{ app.user.creationle | date(('m')) }}</p>
+                        </fieldset>
+                    </div>
+
+                    <div class="petitdetail2">
+                        <fieldset>
+                            <legend>Dernière connexion</legend>
+                            <p class="field1">{{ app.user.connexionLe | date(('d')) }}</p>
+                            <p class="field3">/{{ app.user.connexionLe | date(('m')) }}</p>
+                        </fieldset>
+                    </div>
+
+                    <div class="petitdetail3">
+                        <fieldset>
+                            <legend>Ratio V/D</legend>
+                            <p>{%  if  user.partiesPerdues.count == 0 or user.partiesGagnees.count == 0 %}
+                                    N/A
+                                {% else %}
+                                    {{ user.partiesGagnees.count / user.partiesPerdues.count }}
+                                {% endif %}</p>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cartestat">
+            <img src="{{ asset('assets/images/dice.svg') }}" width="200vw" alt="Dés de Battle of Yggdrasil" style="margin: 0 1.5vw 10vw 0;">
+        </div>
+    </section>
+
+    <section class="popup">
+        <div class="popupbutton">
+            <div class="boutoncontinuernew">
+                <a id="newPartie" href="#"><img src="{{ asset('assets/images/button-new-partie.png') }}" alt="Nouvelle partie" width="200vw"></a>
+                <a id="continuPartie" href="#"><img src="{{ asset('assets/images/button-continuer.png') }}" alt="Continuer à jouer" width="200vw"></a>
+            </div>
+        </div>
+        <div class="modal2">
+            <div class="blocpopup">
+                <div class="divpopup1">
+                    <button class="close">Fermer</button>
+                    <div class="popuphaut">
+                        <fieldset class="fieldset1">
+                            <legend>ADVERSAIRE EN LIGNE</legend>
+                            <div class="noscroll" style="padding-top: 10px;">
+                                <form class="mailbutton" action="{{ path('jeu_distribue_partie') }}" method="POST">
+                                    <div class="form-group">
+                                        <select name="adversaire" id="adversaire">
+                                            <option value="">Choisir</option>
+                                            {% for user in users %}
+                                                {% if user.id != app.user.id %}
+                                                    {% if user.online == 1 %}
+                                                        <option value="{{ user.id }}">{{ user.pseudo }}</option>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <button type="submit" style="width: 65%">Jouer !</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="fieldset1">
+                            <legend>AJOUTER AMIS</legend>
+                            <div class="noscroll">
+                                {% for one in users|slice(0, 10) %}
+                                    {% if one in amisTab %}
+                                    {% else %}
+                                        <div class="mailbutton">
+                                            <p>{{ one.pseudo }}</p>
+                                            <a href="{{ path('profile_amis_ajouter', {user:one.id}) }}"><img src="{{ asset('assets/images/button-ajouter.png') }}" alt="Bouton ajouter" width="25vw"></a>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="popupbas">
+                        <fieldset class="fieldset1" style="padding-top: 10px;">
+                            <legend>LANCER PARTIE CONTRE AMIS</legend>
+                            <div class="noscroll">
+                                <form action="{{ path('jeu_distribue_partie') }}" method="POST">
+                                    <div class="form-group">
+                                        <select name="ami" id="ami">
+                                            <option value="">Choisir</option>
+                                            {% for ami in amis %}
+                                                <option value="{{ ami.amiUser.id }}">{{ ami.amiUser.pseudo }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <button type="submit" style="width: 65%">Jouer !</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="fieldset1">
+                            <legend>LISTE TABLE OUVERTE</legend>
+                                <div class="noscroll">
+                                {% if partieAttente != null %}
+                                    {% set j = 0 %}
+                                    {% for partie in partieAttente %}
+                                        {% if partie.joueur1.id != app.user.id  %}
+                                            <div class="mailbutton">
+                                                {{ j }} - adversaire : {{ partie.joueur1.pseudo }} <a style="text-decoration: none; color: #A19174;" href="{{ path('jeu_rejoindre_partie', {partie: partie.id}) }}">Rejoindre la partie</a>
+                                            </div>
+                                            {% set j = j+1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if j == 0 %}
+                                        <div class="mailbutton">
+                                            Pas de partie en attente !
+                                        </div>
+                                    {% endif %}
+                                    {% else %}
+                                        <div class="mailbutton">
+                                            Pas de partie en attente !
+                                        </div>
+                            {% endif %}
+                            </div>
+                        </fieldset>
+                    </div>
+                        <a href="{{ path('jeu_distribue_partie')}}" class="lienpartie"><img src="{{ asset('assets/images/button-new-partie.png') }}" alt="Nouvelle partie" width="200vw"></a>
+                </div>
+            </div>
+        </div>
+        <div class="modal3">
+            <div class="divpopup2" style="margin: auto;">
+                <div class="popuphaut2">
+                    <fieldset class="fieldset2">
+                        <legend>LES PARTIES EN COURS</legend>
+                        <div class="noscroll2">
+                            {% if partiesJ2 != null %}
+                                {% for partie in partiesJ2 %}
+                                    {% if partie.finieLe == null %}
+                                    <div class="mailbutton" style="justify-content: space-between">
+                                        <p>Partie contre {{partie.joueur1.pseudo }}</p>
+                                        <p>
+                                        <a href="{{ path('jeu_relancer_joueur_partie', {partie:partie.id}) }}"><img src="{{ asset('assets/images/button-mail.png') }}" alt="Bouton mail" width="25vw"></a>
+                                        <a href="{{ path('jeu_affiche_partie', {partie:partie.id} )}}"><img src="{{ asset('assets/images/button-jouer.png') }}" alt="Bouton jouer" width="25vw"></a>
+                                        <a href="{{ path('jeu_abandone_partie', {partie:partie.id}) }}"><img src="{{ asset('assets/images/button-cancel.png') }}" alt="Bouton supprimer" width="25vw"></a>
+                                        </p>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            {% if partiesJ1 != null %}
+                                {% for partie in partiesJ1 %}
+                                    {% if partie.finieLe == null %}
+                                        {% if partie.joueur2 != null %}
+                                            <div class="mailbutton" style="justify-content: space-between">
+                                                <p>Partie contre {{partie.joueur2.pseudo }}</p>
+                                                <p>
+                                                    <a href="{{ path('jeu_relancer_joueur_partie', {partie:partie.id}) }}"><img src="{{ asset('assets/images/button-mail.png') }}" alt="Bouton mail" width="25vw"></a>
+                                                    <a href="{{ path('jeu_affiche_partie', {partie:partie.id} )}}"><img src="{{ asset('assets/images/button-jouer.png') }}" alt="Bouton jouer" width="25vw"></a>
+                                                    <a href="{{ path('jeu_abandone_partie', {partie:partie.id}) }}"><img src="{{ asset('assets/images/button-cancel.png') }}" alt="Bouton supprimer" width="25vw"></a>
+                                                </p>
+                                            </div>
+                                        {% else %}
+                                            <div>
+                                                <p>Partie en attende d'un adversaire !</p>
+                                                <p></p>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </fieldset>
+                    <button class="close" style="margin-bottom: 30px">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- <div class="jumbotron">
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-action active d-flex justify-content-between align-items-center">
+                Vos informations personnelles
+                <span class=""><a href="{{ path('profile_update') }}">Modifier vos informations</a></span>
+                <span class=""><a href="{{ path('profile_mdp') }}">Modifier votre mot de passe</a></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Nom
+                <span class="">{{ app.user.nom }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Prenom
+                <span class="">{{ app.user.prenom }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Adresse email
+                <span class="">{{ app.user.email }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Pseudonyme
+                <span class="">{{ app.user.pseudo }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Création du compte
+                <span class="">{{ app.user.creationle | date(('d/m/Y')) }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Dernière connection
+                <span class="">{{ app.user.connexionLe | date(('d/m/Y')) }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Classement
+                <span class="">X</span>
+            </li>
+
+        </ul>
+    </div> -->
+
+{% endblock %}
+    {% block javascripts %}
+        <script>
+            $(function(){
+                $('#newPartie').click(function(){
+                    $('.modal2').css('display', 'flex');
+                });
+                $('#continuPartie').click(function(){
+                    $('.modal3').css('display', 'flex');
+                });
+                $('.close').click(function(){
+                    $('.modal2').css('display', 'none');
+                });
+                $('.close').click(function(){
+                    $('.modal3').css('display', 'none');
+                });
+            });
+        </script>
+    {% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}Modifier une partie{% endblock %}
+
+{% block body %}
+    <div class="jumbotron" style="margin-bottom: 0; height: 85vh;">
+        <h1 class="text-center">Modifier la partie n° {{ partie.id }}</h1>
+
+        {{ include('partie/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+        <br/>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <p><a href="{{ path('partie_index') }}"><button class="btn btn-primary">Retourner à la liste</button></a></p>
+
+
+            {{ include('partie/_delete_form.html.twig') }}
+        </div>
+
+    </div>
+{% endblock %}

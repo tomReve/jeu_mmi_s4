@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProfileController!{% endblock %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h1>Liste d'ami</h1>
+        <ul>
+
+             {% for ami in amis %}
+                 <li>{{ ami.amiUser.pseudo }}</li> <a href="{{ path('profile_ami_supprimer', {id:ami.id}) }}"><button class="btn btn-danger">Supprimer</button></a>
+             {% endfor %}
+        </ul>
+        <h1>Ajouter un ami</h1>
+        <p><small>Raffraichir pour obtenir de nouveaux amis.</small></p>
+        <ul>
+            {% for one in users|slice(0, 3) %}
+                {% if one in amisTab %}
+                    <li>{{ one.pseudo }}</li><button class="btn btn-primary" disabled>Déja amis</button>
+                {% else %}
+                    <li>{{ one.pseudo }}</li><a href="{{ path('profile_amis_ajouter', {user:one.id}) }}"><button class="btn btn-primary">Ajouter</button></a>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

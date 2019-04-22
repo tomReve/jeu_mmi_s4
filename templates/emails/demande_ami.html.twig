@@ -1,0 +1,9 @@
+<h3>Le joueur {{ pseudo }} vous a ajouté !</h3>
+
+<p>
+    Bonjour {{ name }}, le joueur {{ pseudo }} t’a envoyé une demande d’ami. Si tu le connais ou que souhaite simplement jouer avec lui tu peux accepter sa demande au lien suivant :
+</p>
+<p>
+    <a href="{{ url('profile_amis_accepter', { user:id}) }}">Pour l'ajouter, clique ici !</a>
+</p>
+<p>L’équipe DysPlay.</p>

@@ -1,0 +1,63 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}Gestion des joueurs{% endblock %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h1 class="text-center">Gestion des joueurs</h1>
+
+        <br/>
+
+        <p><a href="{{ path('user_new') }}"><button class="btn btn-primary">Nouveau joueur</button></a></p>
+
+        <p>Nombre de joueurs : {{ nb }}</p>
+        <p>Nombre de joueurs en ligne : {{ nbonline }}</p>
+
+        <table class="table">
+            <thead>
+            <tr class="table-primary text-center">
+                <th scope="col">Id</th>
+                <th scope="col">Email</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Prenom</th>
+                <th scope="col">Pseudo</th>
+                <th scope="col">Dernière connection</th>
+                <th scope="col">Online</th>
+                <th scope="col">Avertissement</th>
+                <th scope="col">Blocage</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr style="background-color: white" class="text-center">
+                    <th scope="row" class="align-middle">{{ user.id }}</th>
+                    <td class="align-middle">{{ user.email }}</td>
+                    <td class="align-middle">{{ user.nom }}</td>
+                    <td class="align-middle">{{ user.prenom }}</td>
+                    <td class="align-middle">{{ user.pseudo }}</td>
+                    <td class="align-middle">{{ user.connexionLe ? user.connexionLe|date('Y-m-d H:i:s') : '' }}</td>
+                    <td class="align-middle">{{ user.online ? 'Yes' : 'No' }}</td>
+                    <td class="align-middle">{{ user.avertissement }}</td>
+                    <td class="align-middle">{{ user.blocage ? 'Yes' : 'No' }}</td>
+                    <td class="text-center">
+                        <a href="{{ path('user_show', {'id': user.id}) }}"><button class="btn btn-info">Voir plus</button></a>
+                        <a href="{{ path('user_edit', {'id': user.id}) }}"><button class="btn btn-success">Modifier</button></a>
+                        {% if user.blocage == 0 %}
+                        <a href="{{ path('user_ban', {'id': user.id}) }}"><button class="btn btn-danger">Bannir</button></a>
+                        {% else %}
+                        <a href="{{ path('user_unban', {'id': user.id}) }}"><button class="btn btn-danger">Débannir</button></a>
+                        {% endif %}
+                        <a href="{{ path('user_avert', {'id': user.id}) }}"><button class="btn btn-warning">Avertir</button></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="15">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base_accueil.html.twig' %}
+
+{% block title %}Connexion - Battle of Yggdrasil{% endblock %}
+
+{% block body %}
+<div class="conteneur2">
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+        <section class="sectionCo">
+            <section class="codiv">
+                <section class="connexion">
+                    <h1>Connexion</h1>
+
+                    <form method="post">
+                        <label>Email du joueur</label>
+                        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" required autofocus>
+                        <label>Mot de passe</label>
+                        <input type="password" name="password" id="inputPassword" required>
+                        <input type="hidden" name="_csrf_token"
+                               value="{{ csrf_token('authenticate') }}"
+                        >
+                        <label class="container">Se souvenir de moi
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                        </label>
+                        <a href="#">Nom d'utilisateur oublié ?</a>
+                        <a href="{{ path('security_forgot_password') }}">Mot de passe oublié ?</a>
+                        <button type="submit" value="Connexion" id="connectionvalidate">Connexion</button>
+                        <a href="{{ path('security_inscription') }}" class="creercompte">Créer un compte ?</a>
+                    </form>
+
+                    <div class="languelien">
+                        <select name="langue" class="langue">
+                            <option value="fr">FR</option>
+                            <option value="en">EN</option>
+                        </select>
+                        <a href="{{ path('main_accueil') }}">Retour</a>
+                    </div>
+                </section>
+            </section>
+
+
+        </section>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Battle of Yggdrasil - Notre jeu{% endblock %}</title>
+        <!--<link rel="stylesheet" href="https://bootswatch.com/4/flatly/bootstrap.min.css">-->
+        <meta name="viewport" content="width=device-width">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,700" rel="stylesheet">
+        <link rel="icon" type="image/png" href="{{ asset('assets/images/logo-or-sans-fond-noir.png') }}"/>
+        <!-- SCRIPT ET CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/style_popup.css') }}">
+        <script type="text/javascript" src="{{ asset('assets/js/scriptJS.js') }}"></script>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body onload="myFunction()">
+    <div id="loader">
+        <div id="spin"></div>
+    </div>
+        {% block body %}{% endblock %}
+    <footer>
+        <div class="footerconditions">
+            <p>Copyright © 2019 DysPlay. Tous droit réservés</p>
+            <a href="">Conditions d’utilisation | </a>  <a href="">Ventes et remboursements |</a>  <a href="">Mentions |</a>  <a href="">Plan du site </a>
+        </div>
+
+        <div class="footerdysplay">
+            <a href="http://149.91.83.88/site_agence/"><img src="{{ asset('assets/images/logo-blanc.png') }}" alt="Logo de notre agence DysPlay" width="120vw"></a>
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+        {% block javascripts %}{% endblock %}
+
+    </body>
+</html>

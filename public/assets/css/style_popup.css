@@ -1,0 +1,78 @@
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+}
+
+.modal2{
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal3{
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+#modalDes{
+    background-image: url("../animation/des.gif");
+}
+
+#modalVictoire{
+    background-image: url("../animation/victoire.gif");
+}
+
+#modalDefaite{
+    background-image: url("../animation/defaite.gif");
+}
+
+#modalArc{
+    background-image: url("../animation/arc_hache.gif");
+}
+
+#modalHache{
+    background-image: url("../animation/hache_bouclier.gif");
+}
+
+#modalBouclier{
+    background-image: url("../animation/arc_bouclier.gif");
+}
+
+#modalVersus{
+    background-image: url("../animation/versus.gif");
+}
+
+select{
+    background-color: transparent;
+    color: #A8997A;
+    border: none;
+    font-family: 'norse-bold';
+    font-size: 1.5vw;
+}
+
+option{
+    color: white    ;
+    background-color: #A8997A;
+}

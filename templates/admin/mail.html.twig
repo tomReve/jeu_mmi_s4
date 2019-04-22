@@ -1,0 +1,18 @@
+{% extends 'admin.html.twig' %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h1>Envoyer un mail à un joueur</h1>
+        <h2>Un joueur en particulier</h2>
+        {{ form_start(form) }}
+        {{ form_row(form.destinataire, {'label' : 'Selectionner un utilisateur', 'attr': {'placeholder' : 'Utilisateur'}}) }}
+        {{ form_row(form.contenu, {'label' : 'Votre contenu', 'attr': {'placeholder' : 'Contenu'}}) }}
+        <button type="submit" class="btn btn-success">Envoyer !</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

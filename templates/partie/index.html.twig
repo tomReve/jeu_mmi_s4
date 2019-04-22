@@ -1,0 +1,52 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}Gestion des parties{% endblock %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h1 class="text-center">Gestion des parties</h1>
+
+        <br/>
+
+        <p><a href="{{ path('partie_new') }}"><button class="btn btn-primary">Nouvelle partie</button></a></p>
+
+        <table class="table">
+            <thead>
+                <tr class="table-primary text-center">
+                    <th scope="col">Id</th>
+                    <th scope="col">Joueur 1</th>
+                    <th scope="col">Joueur 2</th>
+                    <th scope="col">Date de création</th>
+                    <th scope="col">Date de fin</th>
+                    <th scope="col">Type de victoire</th>
+                    <th scope="col">Gagnant</th>
+                    <th scope="col">Perdant</th>
+                    <th scope="col" >Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for partie in parties %}
+                <tr style="background-color: white" class="text-center">
+                    <th scope="row" class="align-middle">{{ partie.id }}</th>
+                    <td class="align-middle">{{ partie.joueur1.pseudo }}</td>
+                    <td class="align-middle">{{ partie.joueur2 ? partie.joueur2.pseudo }}</td>
+                    <td class="align-middle">{{ partie.creationLe ? partie.creationLe|date('Y-m-d H:i:s') : '' }}</td>
+                    <td class="align-middle">{{ partie.finieLe ? partie.finieLe|date('Y-m-d H:i:s') : '' }}</td>
+                    <td class="align-middle">{{ partie.typeVictoire }}</td>
+                    <td class="align-middle">{% if partie.gagnant %}{{ partie.gagnant.pseudo }}{% endif %}</td>
+                    <td class="align-middle">{% if partie.perdant %}{{ partie.perdant.pseudo }}{% endif %}</td>
+                    <td class="text-center">
+                        <a href="{{ path('partie_show', {'id': partie.id}) }}"><button class="btn btn-info">Voir plus</button></a>
+                        <a href="{{ path('partie_edit', {'id': partie.id}) }}"><button class="btn btn-success">Modifier</button></a>
+                        <a href="{{ path('partie_delete', {'id': partie.id}) }}"><button class="btn btn-danger">Supprimer</button></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="10">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

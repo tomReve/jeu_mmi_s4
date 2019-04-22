@@ -1,0 +1,8 @@
+swiftmailer:
+    transport: gmail
+    auth_mode: login
+    port: 465
+    host: smtp.gmail.com
+    username: 'battleofyggdrasil@gmail.com'
+    password: 'B4v.22.U'
+    spool: { type: 'memory' }

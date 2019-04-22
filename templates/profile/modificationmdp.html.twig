@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h2>Modifier mon mot de passe</h2>
+        {{ form_start(form) }}
+        {{ form_row(form.password, {'label' : 'Nouveau mot de passe', 'attr': {'placeholder' : 'Mot de passe', 'value' : false}}) }}
+        <button type="submit" class="btn btn-success" formnovalidate>Modifier</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock body %}
